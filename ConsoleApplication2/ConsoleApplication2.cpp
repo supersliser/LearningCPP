@@ -7,24 +7,29 @@ using namespace std;
 
 int main()
 {
-    cout << "Please enter your username\n";
-    string username = "";
-    cin >> username;
-    do 
+    cout << "Please enter where you will start > ";
+    string start = "";
+    cin >> start;
+    cout << "\nPlease enter where you will finish > ";
+    string finish = "";
+    cin >> finish;
+    cout << "\nPlease enter the distance this journey will take (m) > ";
+    int distance = 0;
+    cin >> distance;
+    cout << "\nPlease enter the time this journey will take (s) > ";
+    int time = 0;
+    cin >> time;
+    float speed = distance / time;
+    string speedSTR = to_string(speed);
+    int num = speedSTR.length();
+    for (int i = 0; i <= speedSTR.length(); i++)
     {
-        cout << "Please enter your password\n";
-        string password;
-        cin >> password;
-
-        if (password == "PA55W()rd")
+        if (speedSTR.substr(i, 1) == ".")
         {
-            cout << "Welcome " + username + "\n";
-            break;
+            num = i + 1;
         }
-
-        cout << "Incorrect Password";
-
-    } while (true);
+    }
+    cout << "\nYour journey from " + start + " to " + finish + " will require you to move at an average speed of " + speedSTR.substr(0, num) + "m/s";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
