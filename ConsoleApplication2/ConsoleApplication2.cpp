@@ -7,29 +7,24 @@ using namespace std;
 
 int main()
 {
-    cout << "Please enter where you will start > ";
-    string start = "";
-    cin >> start;
-    cout << "\nPlease enter where you will finish > ";
-    string finish = "";
-    cin >> finish;
-    cout << "\nPlease enter the distance this journey will take (m) > ";
-    int distance = 0;
-    cin >> distance;
-    cout << "\nPlease enter the time this journey will take (s) > ";
-    int time = 0;
-    cin >> time;
-    float speed = distance / time;
-    string speedSTR = to_string(speed);
-    int num = speedSTR.length();
-    for (int i = 0; i <= speedSTR.length(); i++)
+    const double pi = 3.14159265358979323846;
+    cout << "Please enter the radius of the tank > ";
+    int radius = 0;
+    cin >> radius;
+    cout << "\nPlease enter the height of the tank (m) > ";
+    int height = 0;
+    cin >> height;
+    float volume = pi * (radius * 2) * height;
+    string volumeSTR = to_string(volume);
+    int num = volumeSTR.length();
+    for (int i = 0; i <= volumeSTR.length(); i++)
     {
-        if (speedSTR.substr(i, 1) == ".")
+        if (volumeSTR.substr(i, 1) == ".")
         {
-            num = i + 1;
+            num = i + 4;
         }
     }
-    cout << "\nYour journey from " + start + " to " + finish + " will require you to move at an average speed of " + speedSTR.substr(0, num) + "m/s";
+    cout << "\nThis tank has a volume of " + volumeSTR.substr(0, num) + "m^3";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
