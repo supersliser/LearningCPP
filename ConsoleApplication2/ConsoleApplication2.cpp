@@ -7,29 +7,40 @@ using namespace std;
 
 int main()
 {
-    cout << "Please enter where you will start > ";
-    string start = "";
-    cin >> start;
-    cout << "\nPlease enter where you will finish > ";
-    string finish = "";
-    cin >> finish;
-    cout << "\nPlease enter the distance this journey will take (m) > ";
-    int distance = 0;
-    cin >> distance;
-    cout << "\nPlease enter the time this journey will take (s) > ";
-    int time = 0;
-    cin >> time;
-    float speed = distance / time;
-    string speedSTR = to_string(speed);
-    int num = speedSTR.length();
-    for (int i = 0; i <= speedSTR.length(); i++)
-    {
-        if (speedSTR.substr(i, 1) == ".")
-        {
-            num = i + 1;
-        }
-    }
-    cout << "\nYour journey from " + start + " to " + finish + " will require you to move at an average speed of " + speedSTR.substr(0, num) + "m/s";
+	cout << "Please enter a quadratic in form 'y=mx+c' > ";
+	string equation = "";
+	cin >> equation;
+	float m;
+	float c;
+
+	equation = equation.substr(2);
+	
+	int lengthToX = 0;
+
+	while (equation.substr(lengthToX, 1) != "x") 
+	{
+		lengthToX++;
+	}
+
+	m = stoi(equation.substr(0, lengthToX));
+
+	equation = equation.substr(lengthToX + 1);
+
+	c = stoi(equation.substr(0));
+	cout << "\nPlease enter the start point for x > ";
+	int xstart;
+	cin >> xstart;
+	cout << "\nPlease enter the end point for x > ";
+	int xend;
+	cin >> xend;
+	cout << "\nPlease enter the step size for x > ";
+	int stepsize;
+	cin >> stepsize;
+
+	for (int x = xstart; x <= xend; x += stepsize)
+	{
+		cout << "\nx = " + to_string(x) + " >>>>>>>> y = " + to_string((m * x) + c);
+	}
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
