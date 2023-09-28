@@ -19,11 +19,11 @@ int main()
 		lengthToX++;
 	}
 
-	m = stoi(equation.substr(0, lengthToX));
+	m = stof(equation.substr(0, lengthToX));
 
 	equation = equation.substr(lengthToX + 1);
 
-	c = stoi(equation.substr(0));
+	c = stof(equation.substr(0));
 	cout << "\nPlease enter the start point for x > ";
 	int xstart;
 	cin >> xstart;
