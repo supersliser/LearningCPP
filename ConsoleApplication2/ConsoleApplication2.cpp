@@ -43,6 +43,22 @@ int main()
 	}
 }
 
+class GraphDrawer {
+	
+};
+
+struct Point
+{
+public:
+	int x;
+	int y;
+};
+
+class PointNode {
+	Point data;
+	PointNode *next;
+};
+
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
 
