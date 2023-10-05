@@ -55,8 +55,31 @@ public:
 };
 
 class PointNode {
+public:
 	Point data;
 	PointNode *next;
+};
+
+class PointList {
+private:
+	PointNode *head;
+
+public:
+	void Add(Point inputdata)
+	{
+		PointNode* newNode = new PointNode();
+		newNode->data = inputdata;
+		PointNode* currentNode = head;
+		while (currentNode != NULL)
+		{
+			currentNode = head->next;
+		}
+		currentNode->next = newNode;
+	}
+	void Clear()
+	{
+
+	}
 };
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
