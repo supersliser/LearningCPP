@@ -45,10 +45,11 @@ public:
 
 	void Clear()
 	{
-		while (head != nullptr) {
-			PointNode* temp = head;
-			head = head->next;
-			free(&temp);
+		while (head->next != nullptr)
+		{
+			PointNode* temp = head->next;
+			head->next = temp->next;
+			delete temp;
 		}
 	}
 
@@ -92,36 +93,48 @@ public:
 	{
 		int maxYLength = calculateMaxYLength();
 		int maxXLength = calculateMaxXLength();
-		cout << writeYStarter(maxY, maxYLength);
-		cout << writeX(pointsOnGraph.getItem(0).x, pointsOnGraph.getItem(0).y, maxX, maxYLength, maxXLength);
 		cout << "\n";
-		for (int i = maxY; i >= 1; i--)
+		cout << writeX(getItemAtY(maxY) , pointsOnGraph.getItem(0).y,minX, maxX, maxYLength, maxXLength);
+		cout << "\n";
+		for (int i = maxY - 1; i >= 1; i--)
 		{
-			Point pointItem = pointsOnGraph.getItem(i);
-			cout << writeYStarter(maxY, maxYLength);
-			cout << writeX(pointItem.x, i, maxX, maxYLength, maxXLength);
+			cout << writeX(getItemAtY(i), i, minX, maxX, maxYLength, maxXLength);
 			cout << "\n";
 		}
-		cout << writeRowLines(maxXLength, minX, maxX);
+		cout << writeRowLines(maxXLength, minX, maxX, maxYLength);
+		cout << "\n";
 		cout << writeXBottom(maxXLength, minX, maxX, maxYLength);
-		cout << writeRowLines(maxXLength, minX, maxX);
+		cout << "\n";
+		cout << writeRowLines(maxXLength, minX, maxX, maxYLength);
+		cout << "\n";
 		for (int i = -1; i >= minY; i--)
 		{
-			Point pointItem = pointsOnGraph.getItem(i);
-			cout << writeYStarter(maxY, maxYLength);
-			cout << writeX(pointItem.x, pointItem.y, maxX, maxYLength, maxXLength);
+			PointList pointItem = getItemAtY(i);
+			cout << writeX(getItemAtY(i), i, minX, maxX, maxYLength, maxXLength);
 			cout << "\n";
 		}
 	}
 private:
+	PointList getItemAtY(int y)
+	{
+		PointList output;
+		for (int i = 0; i < pointsOnGraph.Count(); i++)
+		{
+			if (pointsOnGraph.getItem(i).y == y)
+			{
+				output.Add(pointsOnGraph.getItem(i));
+			}
+		}
+		return output;
+	}
 	int calculateMaxYLength()
 	{
 		int output = 0;
 		for (int i = 0; i < pointsOnGraph.Count(); i++)
 		{
-			if (output < pointsOnGraph.getItem(i).y)
+			if (output < to_string(pointsOnGraph.getItem(i).y).length())
 			{
-				output = pointsOnGraph.getItem(i).y;
+				output = to_string(pointsOnGraph.getItem(i).y).length();
 			}
 		}
 		return output;
@@ -131,51 +144,56 @@ private:
 		int output = 0;
 		for (int i = 0; i < pointsOnGraph.Count(); i++)
 		{
-			if (output < pointsOnGraph.getItem(i).x)
+			if (output < to_string(pointsOnGraph.getItem(i).x).length())
 			{
-				output = pointsOnGraph.getItem(i).x;
+				output = to_string(pointsOnGraph.getItem(i).x).length();
 			}
 		}
 		return output;
 	}
-	string writeX(int x, int y, int maxX, int maxYLength, int xSize)
+	string writeX(PointList list, int y, int minX, int maxX, int maxYLength, int xSize)
 	{
 		string output = writeYStarter(y, maxYLength);
-		for (int i = 0; i < x * xSize; i++)
+		for (int i = minX; i <= maxX; i++)
 		{
-			output += " ";
+			for (int j = 0; j < list.Count(); j++)
+			{
+				if (list.getItem(j).x == i)
+				{
+					output += "|";
+				}
+				else
+				{
+					for (int k = 0; k <= xSize; k++)
+					{
+						output += " ";
+					}
+				}
+			}
 		}
-		output += "^";
-		return output;
-	}
-	string writeX(int x1, int x2, int y, int maxX, int maxYLength, int xSize)
-	{
-		string output = writeYStarter(y, maxYLength);
-		{
-			output += " ";
-		}
-		output += "/";
-		for (int i = x1 + 1; i < x2 * xSize; i++)
-		{
-			output += " ";
-		}
-		output += "\\";
 		return output;
 	}
 	string writeYStarter(int y, int maxYLength)
 	{
 		string output = to_string(y);
-		for (int i = 0; i <= maxYLength; i++)
+		for (int i = output.length(); i <= maxYLength; i++)
 		{
 			output += " ";
 		}
 		output += "|";
 		return output;
 	}
-	string writeRowLines(int xSize, int minX, int maxX)
+	string writeRowLines(int xSize, int minX, int maxX, int maxYLength)
 	{
 		string output = "";
-		for (int i = minX; i <= maxX * xSize; i++)
+		for (int i = minX; i <= maxX; i++)
+		{
+			for (int j = 0; j <= xSize; j++)
+			{
+				output += "-";
+			}
+		}
+		for (int i = -1; i <= maxYLength; i++)
 		{
 			output += "-";
 		}
@@ -186,7 +204,7 @@ private:
 		string output = writeYStarter(0, maxYLength);
 		for (int i = minX; i <= maxX; i++)
 		{
-			output += i;
+			output += to_string(i);
 			for (int j = to_string(i).length(); j <= xSize; j++)
 			{
 				output += " ";
@@ -237,7 +255,7 @@ int main()
 
 	PointList points;
 
-	for (int y = (m * xstart) + c; y <= (m * xend) + c; y++)
+	for (int y = (m * xend) + c; y >= (m * xstart) + c; y--)
 	{
 		Point item;
 		item.x = (y - c) / m;
