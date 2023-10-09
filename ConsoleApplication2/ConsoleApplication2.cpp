@@ -45,11 +45,18 @@ public:
 
 	void Clear()
 	{
-		while (head->next != nullptr)
+		try
 		{
-			PointNode* temp = head->next;
-			head->next = temp->next;
-			delete temp;
+			while (head->next != nullptr)
+			{
+				PointNode* temp = head->next;
+				head->next = temp->next;
+				delete temp;
+			}
+		}
+		catch (const exception)
+		{
+
 		}
 	}
 
@@ -151,22 +158,33 @@ private:
 		}
 		return output;
 	}
-	string writeX(PointList list, int y, int minX, int maxX, int maxYLength, int xSize)
+	std::string writeX(PointList list, int y, int minX, int maxX, int maxYLength, int xSize)
 	{
-		string output = writeYStarter(y, maxYLength);
+		string output = "";
 		for (int i = minX; i <= maxX; i++)
 		{
-			for (int j = 0; j < list.Count(); j++)
+			if (i == 0)
 			{
-				if (list.getItem(j).x == i)
+				output += writeYStarter(y, maxYLength);
+			}
+			else
+			{
+				for (int j = 0; j < list.Count(); j++)
 				{
-					output += "|";
-				}
-				else
-				{
-					for (int k = 0; k <= xSize; k++)
+					if (list.getItem(j).x == i)
 					{
-						output += " ";
+						output += "|";
+						for (int k = 1; k <= xSize; k++)
+						{
+							output += " ";
+						}
+					}
+					else
+					{
+						for (int k = 0; k <= xSize; k++)
+						{
+							output += " ";
+						}
 					}
 				}
 			}
@@ -175,8 +193,8 @@ private:
 	}
 	string writeYStarter(int y, int maxYLength)
 	{
-		string output = to_string(y);
-		for (int i = output.length(); i <= maxYLength; i++)
+		string output = "|" + to_string(y);
+		for (int i = output.length(); i <=maxYLength; i++)
 		{
 			output += " ";
 		}
@@ -201,7 +219,7 @@ private:
 	}
 	string writeXBottom(int xSize, int minX, int maxX, int maxYLength)
 	{
-		string output = writeYStarter(0, maxYLength);
+		string output = "";
 		for (int i = minX; i <= maxX; i++)
 		{
 			output += to_string(i);
@@ -245,6 +263,12 @@ int main()
 	cout << "\nPlease enter the step size for x > ";
 	int stepsize;
 	cin >> stepsize;
+
+	while (stepsize == 0)
+	{
+		cout << "\nEntered value " + to_string(stepsize) + "Not allowed, please input another value";
+		cin >> stepsize;
+	}
 
 	for (int x = xstart; x <= xend; x += stepsize)
 	{
