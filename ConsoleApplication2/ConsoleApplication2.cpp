@@ -13,6 +13,12 @@ public:
 	int y;
 };
 
+struct stringReturn
+{
+	string original = "";
+	string removed = "";
+};
+
 class PointNode {
 public:
 	Point data;
@@ -232,9 +238,24 @@ private:
 	}
 };
 
+stringReturn stringSplit(string item, const char* query) {
+	int lengthToPlus = 0;
+
+	while (item.substr(lengthToPlus, 1) != query)
+	{
+		lengthToPlus++;
+	}
+
+	stringReturn output;
+
+	output.removed = item.substr(0, lengthToPlus);
+	output.original = item.substr(lengthToPlus, 9999999999999);
+	return output;
+}
+
 int main()
 {
-	cout << "Please enter a quadratic in form 'y=mx+c' > ";
+	cout << "Please enter a quadratic in form 'y=mx+c' or 'y=x^e+mx+c' > ";
 	string equation = "";
 	cin >> equation;
 	float m;
@@ -242,58 +263,123 @@ int main()
 
 	equation = equation.substr(2);
 	
-	int lengthToX = 0;
-
-	while (equation.substr(lengthToX, 1) != "x") 
+	bool quadratic = false;
+	for (int i = 0; i < equation.length(); i++)
 	{
-		lengthToX++;
+		if (equation.substr(i, 1) == "^")
+		{
+			quadratic = true;
+		}
 	}
-
-	m = stof(equation.substr(0, lengthToX));
-
-	equation = equation.substr(lengthToX + 1);
-
-	c = stof(equation.substr(0));
-	cout << "\nPlease enter the start point for x > ";
-	int xstart;
-	cin >> xstart;
-	cout << "\nPlease enter the end point for x > ";
-	int xend;
-	cin >> xend;
-	cout << "\nPlease enter the step size for x > ";
-	int stepsize;
-	cin >> stepsize;
-
-	while (stepsize == 0)
+	if (!quadratic)
 	{
-		cout << "\nEntered value " + to_string(stepsize) + "Not allowed, please input another value";
+		m = stof(stringSplit(equation, "x").removed);
+
+		equation = stringSplit(equation, "x").original;
+
+		c = stof(equation.substr(0));
+
+
+		cout << "\nPlease enter the start point for x > ";
+		int xstart;
+		cin >> xstart;
+		cout << "\nPlease enter the end point for x > ";
+		int xend;
+		cin >> xend;
+		cout << "\nPlease enter the step size for x > ";
+		int stepsize;
 		cin >> stepsize;
+
+		while (stepsize == 0)
+		{
+			cout << "\nEntered value " + to_string(stepsize) + "Not allowed, please input another value";
+			cin >> stepsize;
+		}
+
+		for (int x = xstart; x <= xend; x += stepsize)
+		{
+			cout << "\nx = " + to_string(x) + " >>>>>>>> y = " + to_string((m * x) + c);
+		}
+
+		GraphDrawer drawer;
+
+		PointList points;
+
+		for (int y = (m * xend) + c; y >= (m * xstart) + c; y--)
+		{
+			Point item;
+			item.x = (y - c) / m;
+			item.y = y;
+			points.Add(item);
+		}
+
+		drawer.pointsOnGraph = points;
+
+		if (m > 0)
+		{
+			drawer.writePositiveGradient(xstart, xend, (m * xstart) + c, (m * xend) + c);
+		}
 	}
-
-	for (int x = xstart; x <= xend; x += stepsize)
+	else
 	{
-		cout << "\nx = " + to_string(x) + " >>>>>>>> y = " + to_string((m * x) + c);
-	}
+		float e;
 
-	GraphDrawer drawer;
+		equation = stof(stringSplit(equation, "^").original);
+		e = stof(stringSplit(equation, "+").removed);
 
-	PointList points;
+		m = stof(stringSplit(equation, "x").removed);
 
-	for (int y = (m * xend) + c; y >= (m * xstart) + c; y--)
-	{
-		Point item;
-		item.x = (y - c) / m;
-		item.y = y;
-		points.Add(item);
-	}
+		equation = stringSplit(equation, "x").original;
 
-	drawer.pointsOnGraph = points;
+		c = stof(equation.substr(0));
 
-	if (m > 0)
-	{
-		drawer.writePositiveGradient(xstart, xend, (m * xstart) + c, (m * xend) + c);
+
+		cout << "\nPlease enter the start point for x > ";
+		int xstart;
+		cin >> xstart;
+		cout << "\nPlease enter the end point for x > ";
+		int xend;
+		cin >> xend;
+		cout << "\nPlease enter the step size for x > ";
+		int stepsize;
+		cin >> stepsize;
+
+		while (stepsize == 0)
+		{
+			cout << "\nEntered value " + to_string(stepsize) + "Not allowed, please input another value";
+			cin >> stepsize;
+		}
+
+		for (int x = xstart; x <= xend; x += stepsize)
+		{
+			cout << "\nx = " + to_string(x) + " >>>>>>>> y = " + to_string(pow(x, e) + (m * x) + c);
+		}
+
+		GraphDrawer drawer;
+
+		PointList points;
+
+		for (int y = (m * xend) + c; y >= (m * xstart) + c; y--)
+		{
+			Point item;
+			item.x = (-m + (sqrt(pow(m, 2) - 4 * (c - y)))) / 2;
+			item.y = y;
+			points.Add(item);
+			item.x = (-m - (sqrt(pow(m, 2) - 4 * (c - y)))) / 2;
+			item.y = y;
+			points.Add(item);
+		}
+
+		drawer.pointsOnGraph = points;
+
+		if (m > 0)
+		{
+			drawer.writePositiveGradient(xstart, xend, (m * xstart) + c, (m * xend) + c);
+		}
 	}
 }
+
+
 
 
 
