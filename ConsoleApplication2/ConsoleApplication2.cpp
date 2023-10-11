@@ -17,6 +17,11 @@ struct stringReturn
 {
 	string original = "";
 	string removed = "";
+	stringReturn(string ori, string rem)
+	{
+		original = ori;
+		removed = rem;
+	}
 };
 
 class PointNode {
@@ -107,9 +112,7 @@ public:
 		int maxYLength = calculateMaxYLength();
 		int maxXLength = calculateMaxXLength();
 		cout << "\n";
-		cout << writeX(getItemAtY(maxY) , pointsOnGraph.getItem(0).y,minX, maxX, maxYLength, maxXLength);
-		cout << "\n";
-		for (int i = maxY - 1; i >= 1; i--)
+		for (int i = maxY; i >= 1; i--)
 		{
 			cout << writeX(getItemAtY(i), i, minX, maxX, maxYLength, maxXLength);
 			cout << "\n";
@@ -245,11 +248,10 @@ stringReturn stringSplit(string item, const char* query) {
 	{
 		lengthToPlus++;
 	}
+	lengthToPlus += 1;
 
-	stringReturn output;
+	stringReturn output(item.substr(lengthToPlus, 9999999999999), item.substr(0, lengthToPlus));
 
-	output.removed = item.substr(0, lengthToPlus);
-	output.original = item.substr(lengthToPlus, 9999999999999);
 	return output;
 }
 
@@ -324,7 +326,7 @@ int main()
 	{
 		float e;
 
-		equation = stof(stringSplit(equation, "^").original);
+		equation = stringSplit(equation, "^").original;
 		e = stof(stringSplit(equation, "+").removed);
 
 		m = stof(stringSplit(equation, "x").removed);
