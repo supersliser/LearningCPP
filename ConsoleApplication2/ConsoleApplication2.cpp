@@ -56,18 +56,11 @@ public:
 
 	void Clear()
 	{
-		try
+		while (head != nullptr && head->next != nullptr)
 		{
-			while (head->next != nullptr)
-			{
-				PointNode* temp = head->next;
-				head->next = temp->next;
-				delete temp;
-			}
-		}
-		catch (const exception)
-		{
-
+			PointNode* temp = head->next;
+			head->next = temp->next;
+			delete temp;
 		}
 	}
 
@@ -180,20 +173,15 @@ private:
 			{
 				for (int j = 0; j < list.Count(); j++)
 				{
+					int k = 0;
 					if (list.getItem(j).x == i)
 					{
 						output += "|";
-						for (int k = 1; k <= xSize; k++)
-						{
-							output += " ";
-						}
+						k++;
 					}
-					else
+					for (int k = 0; k <= xSize; k++)
 					{
-						for (int k = 0; k <= xSize; k++)
-						{
-							output += " ";
-						}
+						output += " ";
 					}
 				}
 			}
@@ -257,7 +245,7 @@ stringReturn stringSplit(string item, const char* query) {
 
 int main()
 {
-	cout << "Please enter a quadratic in form 'y=mx+c' or 'y=x^e+mx+c' > ";
+	cout << "Please enter a quadratic in form 'y=mx+c' or 'y=ex^2+mx+c' > ";
 	string equation = "";
 	cin >> equation;
 	float m;
@@ -294,7 +282,7 @@ int main()
 
 		while (stepsize == 0)
 		{
-			cout << "\nEntered value " + to_string(stepsize) + "Not allowed, please input another value";
+			cout << "\nEntered value " + to_string(stepsize) + " Not allowed, please input another value";
 			cin >> stepsize;
 		}
 
@@ -326,8 +314,8 @@ int main()
 	{
 		float e;
 
+		e = stof(stringSplit(equation, "x").removed);
 		equation = stringSplit(equation, "^").original;
-		e = stof(stringSplit(equation, "+").removed);
 
 		m = stof(stringSplit(equation, "x").removed);
 
@@ -348,7 +336,7 @@ int main()
 
 		while (stepsize == 0)
 		{
-			cout << "\nEntered value " + to_string(stepsize) + "Not allowed, please input another value";
+			cout << "\nEntered value " + to_string(stepsize) + " Not allowed, please input another value";
 			cin >> stepsize;
 		}
 
@@ -361,22 +349,35 @@ int main()
 
 		PointList points;
 
-		for (int y = (m * xend) + c; y >= (m * xstart) + c; y--)
+		for (int y = ; x >= xstart; x--)
 		{
 			Point item;
-			item.x = (-m + (sqrt(pow(m, 2) - 4 * (c - y)))) / 2;
-			item.y = y;
-			points.Add(item);
-			item.x = (-m - (sqrt(pow(m, 2) - 4 * (c - y)))) / 2;
-			item.y = y;
-			points.Add(item);
+			double discriminant = m * m - 4 * e * c;
+
+			// Check the nature of the solutions
+			if (discriminant > 0) {
+				item.x = (-m + sqrt(discriminant)) / (2 * e);
+				item.y = y;
+				points.Add(item);
+				double x2 = (-m - sqrt(discriminant)) / (2 * e);
+			}
+			else if (discriminant == 0) {
+				double x1 = -m / (2 * e);
+			}
+			else {
+				// Handle complex solutions
+				double realPart = -m / (2 * e);
+				double imaginaryPart = sqrt(-discriminant) / (2 * e);
+			}
+
+
 		}
 
 		drawer.pointsOnGraph = points;
 
 		if (m > 0)
 		{
-			drawer.writePositiveGradient(xstart, xend, (m * xstart) + c, (m * xend) + c);
+			drawer.writePositiveGradient(xstart, xend,(e * (xstart * xstart)) + (m * xstart) + c, (e * (xend * xend)) + (m * xend) + c);
 		}
 	}
 }
